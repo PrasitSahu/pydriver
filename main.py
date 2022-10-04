@@ -1,16 +1,17 @@
 import os
+from time import sleep
 
 
 def cls():
+    """ clears the screen """
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-# now, to clear the screen
 cls()
 
 
-# handles stop
 def stop(is_running):
+    """ handles stop """
     if not is_running:
         print_error('The car is already stop.')
         return
@@ -25,29 +26,40 @@ def stop(is_running):
     print('\tBooyay! The car stopped.')
 
 
-# handles start
 def start(is_running):
+    """ handles start """
     if is_running:
         print_error('The car is already running.')
         return
 
-    print('''
-          ______
-         /|_||_\`.__
-        (   _    _ _\\
-      ===`-(_)--(_)-'
+    way = 0
 
-    ''')
-    print('\tBooyay! The car started...')
+    while True:
+        way += 1
+        cls()
+        car = f'''   
+        {'  ' * way} ______
+        {'  ' * way}/|_||_\`.__
+        {'  ' * way}(   _    _ _\\
+        {'==' * way}=`-(_)--(_)-'''
+
+        print(f'''
+                  {car}
+
+            ''')
+        print('\tBooyay! The car started...')
+        sleep(0.28)
+        if way == 12:
+            break
 
 
-# print errors
 def print_error(err):
-    print(f'\n\t{err}')
+    """ prints errors """
+    print(f'\n\twarn: {err}')
 
 
-# main function
 def main():
+    """ main function """
     print('''
                             ______  __   __   ______  ______   _____   _   _   _____  ______ 
                             | ___ \ \ \ / /   |  _  \ | ___ \ |_   _| | | | | |  ___| | ___ \\
@@ -74,21 +86,45 @@ def main():
             Type 'start' to start the car.
             Type 'stop' to stop the car.
             Type 'quit' to quit.
+            Type 'instruct' to show instructions
 
     ''')
+
+    # stores state of the car
     is_running = False
+
+    # command loop
     while True:
         cmd = input('\n\t> ')
         cmd = cmd.lower().strip()
         if cmd == 'start':
+            cls()
             start(is_running)
             is_running = True
         elif cmd == 'stop':
+            cls()
             stop(is_running)
             is_running = False
+        elif cmd == 'instruct':
+            cls()
+            print('''
+
+            INSTRUCTIONS
+            ────────────
+            Type 'start' to start the car.
+            Type 'stop' to stop the car.
+            Type 'quit' to quit.
+            Type 'instruct' to show instructions.
+
+                ''')
         elif cmd == 'quit':
+            if is_running:
+                print_error('Can\'t quit while the car is running. Please stop the car to exit.')
+                continue
             print('\n\tBye! Bye!\n')
             break
+        elif cmd == '':
+            continue
         else:
             print('\tInvalid Command. Try again...')
 
